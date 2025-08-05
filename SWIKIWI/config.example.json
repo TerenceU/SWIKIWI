@@ -1,0 +1,105 @@
+{
+  "sources": [
+    {
+      "name": "Wikipedia IT",
+      "url": "https://it.wikipedia.org/api/rest_v1/page/summary/{query}",
+      "enabled": true,
+      "language": "it",
+      "timeoutSeconds": 30,
+      "userAgent": "SWIKIWI/1.0",
+      "type": "Api",
+      "parameters": {
+        "redirect": "true"
+      },
+      "cssSelectors": {}
+    },
+    {
+      "name": "Wikipedia EN",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/{query}",
+      "enabled": true,
+      "language": "en",
+      "timeoutSeconds": 30,
+      "userAgent": "SWIKIWI/1.0",
+      "type": "Api",
+      "parameters": {
+        "redirect": "true"
+      },
+      "cssSelectors": {}
+    }
+  ],
+  "customApiSources": [
+    {
+      "name": "NewsAPI Example",
+      "searchEndpoint": "https://newsapi.org/v2/everything",
+      "detailEndpoint": "",
+      "enabled": false,
+      "language": "en",
+      "timeoutSeconds": 30,
+      "userAgent": "SWIKIWI/1.0",
+      "type": "Api",
+      "parameters": {},
+      "cssSelectors": {},
+      "searchQueryParam": "q",
+      "responseDataPath": "articles",
+      "maxResults": 5,
+      "fieldMapping": {
+        "titleField": "title",
+        "summaryField": "description",
+        "urlField": "url",
+        "languageField": "",
+        "thumbnailField": "urlToImage",
+        "customFields": {
+          "author": "author",
+          "publishedAt": "publishedAt",
+          "source": "source.name"
+        }
+      },
+      "queryParameters": {
+        "apiKey": "YOUR_API_KEY_HERE",
+        "sortBy": "relevancy",
+        "language": "en"
+      },
+      "headers": {
+        "User-Agent": "SWIKIWI/1.0"
+      }
+    },
+    {
+      "name": "OpenLibrary Books",
+      "searchEndpoint": "https://openlibrary.org/search.json",
+      "detailEndpoint": "",
+      "enabled": false,
+      "language": "en",
+      "timeoutSeconds": 30,
+      "userAgent": "SWIKIWI/1.0",
+      "type": "Api",
+      "parameters": {},
+      "cssSelectors": {},
+      "searchQueryParam": "q",
+      "responseDataPath": "docs",
+      "maxResults": 5,
+      "fieldMapping": {
+        "titleField": "title",
+        "summaryField": "first_sentence",
+        "urlField": "key",
+        "languageField": "",
+        "thumbnailField": "",
+        "customFields": {
+          "author": "author_name",
+          "publishYear": "first_publish_year",
+          "isbn": "isbn"
+        }
+      },
+      "queryParameters": {
+        "limit": "10"
+      },
+      "headers": {}
+    }
+  ],
+  "settings": {
+    "maxResults": 10,
+    "timeoutSeconds": 30,
+    "enableCaching": true,
+    "logLevel": "Information",
+    "outputFormat": "table"
+  }
+}

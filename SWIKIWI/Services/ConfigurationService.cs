@@ -129,6 +129,31 @@ public class ConfigurationService
                     }
                 }
             },
+            CustomApiSources = new List<CustomApiSource>
+            {
+                new CustomApiSource
+                {
+                    Name = "JSONPlaceholder Example",
+                    SearchEndpoint = "https://jsonplaceholder.typicode.com/posts",
+                    Enabled = false,
+                    Language = "en",
+                    Type = SourceType.Api,
+                    SearchQueryParam = "title",
+                    ResponseDataPath = "",
+                    FieldMapping = new ApiFieldMapping
+                    {
+                        TitleField = "title",
+                        SummaryField = "body",
+                        UrlField = "id", // Convertiremo l'ID in URL
+                        CustomFields = new Dictionary<string, string>
+                        {
+                            ["userId"] = "userId",
+                            ["postId"] = "id"
+                        }
+                    },
+                    MaxResults = 5
+                }
+            },
             Settings = new AppSettings()
         };
     }

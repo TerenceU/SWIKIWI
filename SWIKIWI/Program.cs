@@ -39,12 +39,17 @@ class Program
                 configService,
                 searchEngine,
                 loggerFactory.CreateLogger<ConfigCommand>());
+                
+            var interactiveSearchCommand = new InteractiveSearchCommand(
+                searchEngine,
+                loggerFactory.CreateLogger<InteractiveSearchCommand>());
 
             // Creazione del comando root
             var rootCommand = new RootCommand("SWIKIWI - Smart Wiki Information Search Tool")
             {
                 searchCommand.CreateCommand(),
-                configCommand.CreateCommand()
+                configCommand.CreateCommand(),
+                interactiveSearchCommand.CreateCommand()
             };
 
             // Aggiunta del comando di aiuto globale
@@ -55,7 +60,8 @@ class Program
                 
                 Esempi di utilizzo:
                   swikiwi search "Leonardo da Vinci"
-                  swikiwi search "Artificial Intelligence" --source wikipedia --limit 5
+                  swikiwi isearch "Artificial Intelligence"    # Ricerca interattiva
+                  swikiwi search "Roma" --source wikipedia --limit 5
                   swikiwi config show
                   swikiwi config enable "Wikipedia EN"
                 """;

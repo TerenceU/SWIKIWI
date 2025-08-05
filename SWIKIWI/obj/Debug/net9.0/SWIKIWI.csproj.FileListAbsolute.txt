@@ -46,3 +46,4 @@ C:\Users\teren\source\repos\PersonalTOOLS\SWIKIWI\SWIKIWI\obj\Debug\net9.0\refin
 C:\Users\teren\source\repos\PersonalTOOLS\SWIKIWI\SWIKIWI\obj\Debug\net9.0\SWIKIWI.pdb
 C:\Users\teren\source\repos\PersonalTOOLS\SWIKIWI\SWIKIWI\obj\Debug\net9.0\SWIKIWI.genruntimeconfig.cache
 C:\Users\teren\source\repos\PersonalTOOLS\SWIKIWI\SWIKIWI\obj\Debug\net9.0\ref\SWIKIWI.dll
+C:\Users\teren\source\repos\PersonalTOOLS\SWIKIWI\SWIKIWI\obj\Debug\net9.0\SWIKIWI.sourcelink.json

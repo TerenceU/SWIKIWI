@@ -7,11 +7,13 @@ SWIKIWI è uno strumento CLI (Command Line Interface) sviluppato in C# che perme
 ## ✨ Funzionalità
 
 - **Ricerca Multi-fonte**: Cerca simultaneamente su Wikipedia (IT/EN), Britannica e altre fonti configurabili
+- **Ricerca Interattiva**: Seleziona risultati per approfondimenti con comando `isearch`
+- **Fonti API Personalizzate**: Aggiungi qualsiasi API REST con mapping personalizzato dei campi
 - **Configurazione Flessibile**: Personalizza le fonti di ricerca tramite file JSON
 - **Interfaccia CLI Intuitiva**: Comandi semplici e output formattato
 - **Supporto Multilingua**: Ricerca in italiano e inglese
 - **Risultati Strutturati**: Output organizzato e leggibile
-- **Caching Intelligente**: Memorizza i risultati per ricerche più veloci
+- **Azioni sui Risultati**: Apri URL, copia link, cerca argomenti correlati
 
 ## 🚀 Installazione
 
@@ -35,6 +37,9 @@ dotnet run
 # Ricerca semplice
 swikiwi search "argomento da cercare"
 
+# Ricerca interattiva (con selezione risultati)
+swikiwi isearch "argomento da cercare"
+
 # Ricerca con fonte specifica
 swikiwi search "argomento" --source wikipedia
 
@@ -45,6 +50,9 @@ swikiwi config show
 swikiwi config enable wikipedia
 swikiwi config disable britannica
 
+# Verifica stato fonti
+swikiwi config status
+
 # Aiuto
 swikiwi --help
 ```
@@ -54,6 +62,9 @@ swikiwi --help
 ```bash
 # Cerca informazioni su Leonardo da Vinci
 swikiwi search "Leonardo da Vinci"
+
+# Ricerca interattiva con selezione risultati
+swikiwi isearch "Artificial Intelligence"
 
 # Cerca solo su Wikipedia inglese
 swikiwi search "Artificial Intelligence" --source "Wikipedia EN"
@@ -91,6 +102,64 @@ Il file `config.json` permette di personalizzare:
   }
 }
 ```
+
+### 🔧 Fonti API Personalizzate
+
+SWIKIWI supporta l'aggiunta di fonti API personalizzate tramite configurazione JSON. Puoi aggiungere qualsiasi API REST che restituisca dati strutturati.
+
+#### Configurazione di una fonte personalizzata
+
+```json
+{
+  "customApiSources": [
+    {
+      "name": "Nome della tua API",
+      "searchEndpoint": "https://api.example.com/search",
+      "enabled": true,
+      "language": "en",
+      "searchQueryParam": "q",
+      "responseDataPath": "results",
+      "maxResults": 5,
+      "fieldMapping": {
+        "titleField": "title",
+        "summaryField": "description", 
+        "urlField": "url",
+        "thumbnailField": "image",
+        "customFields": {
+          "author": "author",
+          "date": "publishedAt"
+        }
+      },
+      "queryParameters": {
+        "apiKey": "YOUR_API_KEY",
+        "format": "json"
+      },
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      }
+    }
+  ]
+}
+```
+
+#### Campi di configurazione:
+
+- **searchEndpoint**: URL dell'endpoint di ricerca
+- **searchQueryParam**: Nome del parametro per la query (default: "q")
+- **responseDataPath**: Percorso JSONPath per i risultati (es. "data.results")
+- **fieldMapping**: Mappatura tra campi API e nostri campi standard
+- **queryParameters**: Parametri fissi da aggiungere alla query
+- **headers**: Headers HTTP personalizzati
+
+#### Esempi di fonti supportate:
+
+- **NewsAPI**: Per articoli di news
+- **OpenLibrary**: Per ricerca libri
+- **GitHub API**: Per repository
+- **JSONPlaceholder**: Per test
+- Qualsiasi API REST che restituisca JSON
+
+Vedi `config.example.json` per esempi completi di configurazione.
 
 ## 🏗️ Architettura
 
@@ -146,23 +215,36 @@ SWIKIWI/
 
 ## 📝 TODO / Roadmap
 
+### ✅ Versione 1.0 (Completato)
+- [x] Architettura base con Models, Services, Commands
+- [x] Integrazione Wikipedia IT/EN con API ufficiali
+- [x] Sistema di configurazione JSON
+- [x] CLI completa con System.CommandLine
+- [x] Ricerca interattiva con selezione risultati
+- [x] Fonti API personalizzate configurabili
+- [x] Mapping flessibile campi API → SearchResult
+- [x] Azioni sui risultati (apri URL, copia, ricerca correlata)
+
 ### Versione 1.1
 - [ ] Supporto per ricerca vocale
 - [ ] Export risultati in PDF/HTML
-- [ ] Integrazione con più API di knowledge base
 - [ ] Cache distribuita
+- [ ] Britannica web scraping
+- [ ] Più esempi di fonti personalizzate
 
 ### Versione 1.2
 - [ ] Interfaccia web opzionale
 - [ ] Supporto per plugin personalizzati
 - [ ] Analisi sentiment dei risultati
 - [ ] Machine learning per ranking risultati
+- [ ] Ricerca full-text su contenuti cached
 
 ### Versione 2.0
 - [ ] Supporto per domande in linguaggio naturale
 - [ ] Integrazione AI per riassunti automatici
 - [ ] Modalità conversazionale
 - [ ] API REST per integrazione esterna
+- [ ] Dashboard web per gestione configurazioni
 
 ## 🐛 Bug Reports & Feature Requests
 

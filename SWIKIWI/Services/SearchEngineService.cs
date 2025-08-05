@@ -27,6 +27,7 @@ public class SearchEngineService
     {
         var config = await _configService.LoadConfigurationAsync();
         
+        // Inizializza fonti standard
         foreach (var source in config.Sources.Where(s => s.Enabled))
         {
             try
@@ -46,6 +47,24 @@ public class SearchEngineService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Errore nell'inizializzazione del servizio {ServiceName}", source.Name);
+            }
+        }
+        
+        // Inizializza fonti API personalizzate
+        foreach (var source in config.CustomApiSources.Where(s => s.Enabled))
+        {
+            try
+            {
+                var customService = new CustomApiService(_httpClient,
+                    Microsoft.Extensions.Logging.LoggerFactory.Create(builder => builder.AddConsole())
+                        .CreateLogger<CustomApiService>(), source);
+
+                _searchServices[source.Name] = customService;
+                _logger.LogInformation("Servizio API personalizzato inizializzato: {ServiceName}", source.Name);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Errore nell'inizializzazione del servizio personalizzato {ServiceName}", source.Name);
             }
         }
     }

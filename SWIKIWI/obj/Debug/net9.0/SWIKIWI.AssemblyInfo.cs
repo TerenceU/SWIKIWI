@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SWIKIWI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7172b5cc6bc801904cb37ed81a0f181108606e74")]
 [assembly: System.Reflection.AssemblyProductAttribute("SWIKIWI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SWIKIWI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

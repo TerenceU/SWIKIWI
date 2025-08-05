@@ -6,6 +6,7 @@ namespace SWIKIWI.Models;
 public class Configuration
 {
     public List<SearchSource> Sources { get; set; } = new();
+    public List<CustomApiSource> CustomApiSources { get; set; } = new();
     public AppSettings Settings { get; set; } = new();
 }
 
