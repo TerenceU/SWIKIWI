@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute(("CLI tool for multi-source knowledge search across Wikipedia, custom APIs and conf" +
     "igurable sources"))]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bfae2e6c1b8d8dcd938a6e4ca2645bbc538f8d85")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+77a55f3785ac3e71a8190bbc2bb1f385a0f587e5")]
 [assembly: System.Reflection.AssemblyProductAttribute("SWIKIWI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SWIKIWI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

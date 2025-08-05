@@ -47,10 +47,34 @@ public class ConfigCommand
         var statusCommand = new Command("status", "Mostra lo stato delle fonti");
         statusCommand.SetHandler(async () => await ShowSourceStatusAsync());
 
+        // Comando set-file (nuovo)
+        var setFileCommand = new Command("set-file", "Cambia il file di configurazione attivo");
+        var profileNameArg = new Argument<string>("profile", "Nome del profilo di configurazione");
+        setFileCommand.Add(profileNameArg);
+        setFileCommand.SetHandler(async (profile) => await SetConfigFileAsync(profile), profileNameArg);
+
+        // Comando default (nuovo)
+        var defaultCommand = new Command("default", "Crea/ripristina la configurazione di default");
+        defaultCommand.SetHandler(async () => await CreateDefaultConfigAsync());
+
+        // Comando list-profiles (nuovo)
+        var listProfilesCommand = new Command("list-profiles", "Lista tutti i profili di configurazione disponibili");
+        listProfilesCommand.SetHandler(() => ListProfiles());
+
+        // Comando create-profile (nuovo)
+        var createProfileCommand = new Command("create-profile", "Crea un nuovo profilo di configurazione");
+        var newProfileNameArg = new Argument<string>("name", "Nome del nuovo profilo");
+        createProfileCommand.Add(newProfileNameArg);
+        createProfileCommand.SetHandler(async (name) => await CreateProfileAsync(name), newProfileNameArg);
+
         configCommand.Add(showCommand);
         configCommand.Add(enableCommand);
         configCommand.Add(disableCommand);
         configCommand.Add(statusCommand);
+        configCommand.Add(setFileCommand);
+        configCommand.Add(defaultCommand);
+        configCommand.Add(listProfilesCommand);
+        configCommand.Add(createProfileCommand);
 
         return configCommand;
     }
@@ -60,9 +84,12 @@ public class ConfigCommand
         try
         {
             var config = await _configService.LoadConfigurationAsync();
+            var currentProfile = _configService.GetCurrentProfile();
 
             Console.WriteLine("⚙️  Configurazione SWIKIWI");
             Console.WriteLine("=========================");
+            Console.WriteLine($"📁 Profilo attivo: {currentProfile}");
+            Console.WriteLine($"📂 Directory config: {ConfigurationService.GetConfigDirectory()}");
             Console.WriteLine();
 
             Console.WriteLine("📊 Impostazioni generali:");
@@ -167,6 +194,133 @@ public class ConfigCommand
         {
             _logger.LogError(ex, "Errore nella verifica dello stato delle fonti");
             Console.WriteLine($"❌ Errore nella verifica dello stato: {ex.Message}");
+        }
+    }
+
+    private async Task SetConfigFileAsync(string profileName)
+    {
+        try
+        {
+            var success = await _configService.SetConfigFileAsync(profileName);
+
+            if (success)
+            {
+                Console.WriteLine($"✅ Configurazione cambiata al profilo: {profileName}");
+                Console.WriteLine($"📁 Percorso: {ConfigurationService.GetConfigDirectory()}\\{profileName}.json");
+            }
+            else
+            {
+                Console.WriteLine($"❌ Errore nel cambio del profilo: {profileName}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Errore nel cambio del file di configurazione");
+            Console.WriteLine($"❌ Errore: {ex.Message}");
+        }
+    }
+
+    private async Task CreateDefaultConfigAsync()
+    {
+        try
+        {
+            var success = await _configService.CreateDefaultConfigAsync();
+
+            if (success)
+            {
+                Console.WriteLine("✅ Configurazione di default creata con successo");
+                Console.WriteLine($"📁 Percorso: {ConfigurationService.GetConfigDirectory()}\\config.json");
+                Console.WriteLine();
+                Console.WriteLine("📋 La configurazione include:");
+                Console.WriteLine("   • Wikipedia IT e EN abilitati");
+                Console.WriteLine("   • Esempio di API personalizzata (JSONPlaceholder)");
+                Console.WriteLine("   • Impostazioni di default ottimizzate");
+            }
+            else
+            {
+                Console.WriteLine("❌ Errore nella creazione della configurazione di default");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Errore nella creazione della configurazione di default");
+            Console.WriteLine($"❌ Errore: {ex.Message}");
+        }
+    }
+
+    private void ListProfiles()
+    {
+        try
+        {
+            var profiles = _configService.ListProfiles();
+            var currentProfile = _configService.GetCurrentProfile();
+
+            Console.WriteLine("📂 Profili di configurazione disponibili:");
+            Console.WriteLine($"📁 Directory: {ConfigurationService.GetConfigDirectory()}");
+            Console.WriteLine();
+
+            if (profiles.Count == 0)
+            {
+                Console.WriteLine("   ℹ️  Nessun profilo trovato. Usa 'swikiwi config default' per creare il profilo di base.");
+                return;
+            }
+
+            foreach (var profile in profiles.OrderBy(p => p))
+            {
+                var indicator = profile == currentProfile ? "👉" : "  ";
+                var status = profile == currentProfile ? " (attivo)" : "";
+                Console.WriteLine($"{indicator} {profile}{status}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"📌 Profilo corrente: {currentProfile}");
+            Console.WriteLine("💡 Usa 'swikiwi config set-file <nome>' per cambiare profilo");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Errore nella lista dei profili");
+            Console.WriteLine($"❌ Errore: {ex.Message}");
+        }
+    }
+
+    private async Task CreateProfileAsync(string profileName)
+    {
+        try
+        {
+            // Validazione nome profilo
+            if (string.IsNullOrWhiteSpace(profileName))
+            {
+                Console.WriteLine("❌ Il nome del profilo non può essere vuoto");
+                return;
+            }
+
+            if (profileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                Console.WriteLine("❌ Il nome del profilo contiene caratteri non validi");
+                return;
+            }
+
+            var success = await _configService.CreateProfileAsync(profileName);
+
+            if (success)
+            {
+                Console.WriteLine($"✅ Profilo '{profileName}' creato con successo");
+                Console.WriteLine($"📁 Percorso: {ConfigurationService.GetConfigDirectory()}\\{profileName}.json");
+                Console.WriteLine();
+                Console.WriteLine("💡 Comandi utili:");
+                Console.WriteLine($"   • swikiwi config set-file {profileName}  # Attiva questo profilo");
+                Console.WriteLine($"   • swikiwi config show                    # Mostra configurazione attuale");
+                Console.WriteLine($"   • swikiwi config list-profiles           # Lista tutti i profili");
+            }
+            else
+            {
+                Console.WriteLine($"❌ Il profilo '{profileName}' esiste già o si è verificato un errore");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Errore nella creazione del profilo");
+            Console.WriteLine($"❌ Errore: {ex.Message}");
         }
     }
 

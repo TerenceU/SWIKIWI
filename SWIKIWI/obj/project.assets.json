@@ -1284,8 +1284,7 @@
       "sources": {
         "C:\\Program Files (x86)\\DevExpress 21.2\\Components\\System\\Components\\Packages": {},
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://pkgs.dev.azure.com/CTSolutionTeam/_packaging/CTSolutionTeam/nuget/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
@@ -1353,13 +1352,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Si è verificato un errore durante il recupero dei dati sulla vulnerabilità del pacchetto: Non è possibile caricare l'indice del servizio per l'origine https://pkgs.dev.azure.com/CTSolutionTeam/_packaging/CTSolutionTeam/nuget/v3/index.json."
-    }
-  ]
+  }
 }

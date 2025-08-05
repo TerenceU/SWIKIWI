@@ -1,0 +1,94 @@
+{
+  "settings": {
+    "maxResults": 15,
+    "timeout": 45,
+    "cacheEnabled": true,
+    "logLevel": "Information",
+    "outputFormat": "table",
+    "userAgent": "SWIKIWI/1.0 (https://github.com/TerenceU/SWIKIWI)"
+  },
+  "sources": [
+    {
+      "name": "Wikipedia IT",
+      "url": "https://it.wikipedia.org/api/rest_v1/page/summary/{query}",
+      "enabled": true,
+      "language": "it",
+      "type": "Api",
+      "timeout": 30
+    },
+    {
+      "name": "Wikipedia EN",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/{query}",
+      "enabled": true,
+      "language": "en",
+      "type": "Api",
+      "timeout": 30
+    },
+    {
+      "name": "Britannica",
+      "url": "https://www.britannica.com/search?query={query}",
+      "enabled": true,
+      "language": "en",
+      "type": "WebScraping",
+      "timeout": 45,
+      "selectors": {
+        "title": "h3.font_primary",
+        "summary": ".summary",
+        "url": "a[href*='/topic/']"
+      }
+    }
+  ],
+  "customApiSources": [
+    {
+      "name": "JSONPlaceholder Posts",
+      "searchEndpoint": "https://jsonplaceholder.typicode.com/posts",
+      "enabled": false,
+      "language": "en",
+      "type": "Api",
+      "searchQueryParam": "title_like",
+      "responseDataPath": "",
+      "maxResults": 3,
+      "fieldMapping": {
+        "titleField": "title",
+        "summaryField": "body",
+        "urlField": "id",
+        "customFields": {
+          "userId": "userId",
+          "postId": "id"
+        }
+      },
+      "queryParameters": {
+        "_limit": "3"
+      }
+    },
+    {
+      "name": "NewsAPI Headlines",
+      "searchEndpoint": "https://newsapi.org/v2/everything",
+      "enabled": false,
+      "language": "en",
+      "type": "Api",
+      "searchQueryParam": "q",
+      "responseDataPath": "articles",
+      "maxResults": 5,
+      "fieldMapping": {
+        "titleField": "title",
+        "summaryField": "description",
+        "urlField": "url",
+        "thumbnailField": "urlToImage",
+        "customFields": {
+          "author": "author",
+          "publishedAt": "publishedAt",
+          "source": "source.name"
+        }
+      },
+      "queryParameters": {
+        "apiKey": "YOUR_NEWS_API_KEY",
+        "sortBy": "relevancy",
+        "pageSize": "5"
+      },
+      "headers": {
+        "User-Agent": "SWIKIWI/1.0"
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "DkGuSwZN8Fs=",
+  "dgSpecHash": "+RJ/jcDO/p4=",
   "success": true,
   "projectFilePath": "C:\\Users\\teren\\source\\repos\\PersonalTOOLS\\SWIKIWI\\SWIKIWI\\SWIKIWI.csproj",
   "expectedPackageFiles": [
@@ -26,12 +26,5 @@
     "C:\\Users\\teren\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
     "C:\\Users\\teren\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Si è verificato un errore durante il recupero dei dati sulla vulnerabilità del pacchetto: Non è possibile caricare l'indice del servizio per l'origine https://pkgs.dev.azure.com/CTSolutionTeam/_packaging/CTSolutionTeam/nuget/v3/index.json."
-    }
-  ]
+  "logs": []
 }
