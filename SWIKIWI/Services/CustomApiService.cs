@@ -21,7 +21,7 @@ public class CustomApiService : ISearchService
         _httpClient = httpClient;
         _logger = logger;
         _source = source;
-        
+
         _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_source.UserAgent);
         _httpClient.Timeout = TimeSpan.FromSeconds(_source.TimeoutSeconds);
 
@@ -43,22 +43,22 @@ public class CustomApiService : ISearchService
         try
         {
             _logger.LogDebug("Avvio ricerca {ServiceName} per: {Query}", Name, query);
-            
+
             var searchUrl = BuildSearchUrl(query);
             _logger.LogDebug("URL ricerca: {Url}", searchUrl);
-            
+
             var response = await _httpClient.GetAsync(searchUrl, cancellationToken);
             response.EnsureSuccessStatusCode();
-            
+
             var json = await response.Content.ReadAsStringAsync(cancellationToken);
-            _logger.LogDebug("Risposta API {ServiceName}: {Json}", Name, 
+            _logger.LogDebug("Risposta API {ServiceName}: {Json}", Name,
                 json.Length > 500 ? json[..500] + "..." : json);
-            
+
             var results = ParseSearchResults(json);
-            
-            _logger.LogInformation("{ServiceName}: trovati {Count} risultati per '{Query}'", 
+
+            _logger.LogInformation("{ServiceName}: trovati {Count} risultati per '{Query}'",
                 Name, results.Count(), query);
-            
+
             return results;
         }
         catch (Exception ex)
@@ -85,23 +85,23 @@ public class CustomApiService : ISearchService
     private string BuildSearchUrl(string query)
     {
         var url = _source.SearchEndpoint;
-        
+
         // Aggiungi il parametro di query principale
         var separator = url.Contains('?') ? "&" : "?";
         url += $"{separator}{_source.SearchQueryParam}={Uri.EscapeDataString(query)}";
-        
+
         // Aggiungi parametri aggiuntivi
         foreach (var param in _source.QueryParameters)
         {
             url += $"&{param.Key}={Uri.EscapeDataString(param.Value)}";
         }
-        
+
         // Aggiungi limite risultati se configurato
         if (_source.MaxResults > 0)
         {
             url += $"&limit={_source.MaxResults}";
         }
-        
+
         return url;
     }
 
@@ -111,7 +111,7 @@ public class CustomApiService : ISearchService
         {
             using var document = JsonDocument.Parse(json);
             var root = document.RootElement;
-            
+
             // Naviga al percorso dei dati se specificato
             var dataElement = root;
             if (!string.IsNullOrEmpty(_source.ResponseDataPath))
@@ -130,7 +130,7 @@ public class CustomApiService : ISearchService
                     }
                 }
             }
-            
+
             // Se dataElement è un array, processa ogni elemento
             if (dataElement.ValueKind == JsonValueKind.Array)
             {
@@ -139,7 +139,7 @@ public class CustomApiService : ISearchService
                     .Where(r => r != null)
                     .Cast<SearchResult>();
             }
-            
+
             // Se è un singolo oggetto, prova a convertirlo
             var singleResult = ParseSingleResult(dataElement);
             return singleResult != null ? new[] { singleResult } : Enumerable.Empty<SearchResult>();
@@ -156,12 +156,12 @@ public class CustomApiService : ISearchService
         try
         {
             var mapping = _source.FieldMapping;
-            
+
             var title = GetFieldValue(element, mapping.TitleField) ?? "Titolo non disponibile";
             var summary = GetFieldValue(element, mapping.SummaryField) ?? "Riassunto non disponibile";
             var url = GetFieldValue(element, mapping.UrlField) ?? "";
             var thumbnail = GetFieldValue(element, mapping.ThumbnailField) ?? "";
-            
+
             var result = new SearchResult
             {
                 Title = title,
@@ -175,7 +175,7 @@ public class CustomApiService : ISearchService
                     ["thumbnail"] = thumbnail
                 }
             };
-            
+
             // Aggiungi campi personalizzati ai metadata
             foreach (var customField in mapping.CustomFields)
             {
@@ -185,7 +185,7 @@ public class CustomApiService : ISearchService
                     result.Metadata[customField.Key] = value;
                 }
             }
-            
+
             return result;
         }
         catch (Exception ex)
@@ -201,10 +201,10 @@ public class CustomApiService : ISearchService
         {
             if (string.IsNullOrEmpty(fieldPath))
                 return null;
-            
+
             var current = element;
             var pathParts = fieldPath.Split('.');
-            
+
             foreach (var part in pathParts)
             {
                 if (current.TryGetProperty(part, out var nextElement))
@@ -216,7 +216,7 @@ public class CustomApiService : ISearchService
                     return null;
                 }
             }
-            
+
             return current.ValueKind switch
             {
                 JsonValueKind.String => current.GetString(),

@@ -22,7 +22,7 @@ public class WikipediaService : ISearchService
         _httpClient = httpClient;
         _logger = logger;
         _source = source;
-        
+
         _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_source.UserAgent);
         _httpClient.Timeout = TimeSpan.FromSeconds(_source.TimeoutSeconds);
     }
@@ -38,10 +38,10 @@ public class WikipediaService : ISearchService
         try
         {
             _logger.LogDebug("Avvio ricerca Wikipedia per: {Query}", query);
-            
+
             // Prima cerchiamo i risultati di ricerca
             var searchResults = await SearchArticlesAsync(query, cancellationToken);
-            
+
             if (!searchResults.Any())
             {
                 _logger.LogDebug("Nessun risultato trovato nella ricerca per: {Query}", query);
@@ -73,7 +73,7 @@ public class WikipediaService : ISearchService
                 }
             }
 
-            _logger.LogInformation("Wikipedia {Language}: trovati {Count} risultati per '{Query}'", 
+            _logger.LogInformation("Wikipedia {Language}: trovati {Count} risultati per '{Query}'",
                 _source.Language.ToUpperInvariant(), results.Count, query);
 
             return results;
@@ -103,23 +103,23 @@ public class WikipediaService : ISearchService
     {
         var baseUrl = GetBaseUrl();
         var searchUrl = $"{baseUrl}/w/api.php?action=query&list=search&srsearch={Uri.EscapeDataString(query)}&format=json&srlimit=5";
-        
+
         _logger.LogDebug("Chiamata API Wikipedia: {Url}", searchUrl);
-        
+
         var response = await _httpClient.GetAsync(searchUrl, cancellationToken);
         response.EnsureSuccessStatusCode();
-        
+
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
         _logger.LogDebug("Risposta API Wikipedia: {Json}", json.Length > 500 ? json[..500] + "..." : json);
-        
+
         var searchResponse = JsonSerializer.Deserialize<WikipediaSearchResponse>(json, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         });
-        
+
         var titles = searchResponse?.Query?.Search?.Select(s => s.Title) ?? Enumerable.Empty<string>();
         _logger.LogDebug("Titoli trovati: {Titles}", string.Join(", ", titles));
-        
+
         return titles;
     }
 
@@ -127,27 +127,27 @@ public class WikipediaService : ISearchService
     {
         var baseUrl = GetBaseUrl();
         var summaryUrl = $"{baseUrl}/api/rest_v1/page/summary/{Uri.EscapeDataString(title)}";
-        
+
         _logger.LogDebug("Recupero summary da: {Url}", summaryUrl);
-        
+
         try
         {
             var response = await _httpClient.GetAsync(summaryUrl, cancellationToken);
-            
+
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogDebug("Errore HTTP {StatusCode} per summary di {Title}", response.StatusCode, title);
                 return null;
             }
-            
+
             var json = await response.Content.ReadAsStringAsync(cancellationToken);
             _logger.LogDebug("Risposta summary: {Json}", json.Length > 200 ? json[..200] + "..." : json);
-            
+
             var summary = JsonSerializer.Deserialize<WikipediaSummaryResponse>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
-            
+
             if (summary == null)
             {
                 _logger.LogDebug("Deserializzazione summary fallita per {Title}", title);
@@ -212,13 +212,13 @@ public class WikipediaService : ISearchService
     {
         public string? Title { get; set; }
         public string? Extract { get; set; }
-        
+
         [JsonPropertyName("pageid")]
         public int? PageId { get; set; }
-        
+
         [JsonPropertyName("content_urls")]
         public WikipediaContentUrls? ContentUrls { get; set; }
-        
+
         public WikipediaThumbnail? Thumbnail { get; set; }
     }
 

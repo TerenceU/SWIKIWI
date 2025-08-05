@@ -14,7 +14,7 @@ public class ConfigCommand
     private readonly ILogger<ConfigCommand> _logger;
 
     public ConfigCommand(
-        ConfigurationService configService, 
+        ConfigurationService configService,
         SearchEngineService searchEngine,
         ILogger<ConfigCommand> logger)
     {
@@ -60,7 +60,7 @@ public class ConfigCommand
         try
         {
             var config = await _configService.LoadConfigurationAsync();
-            
+
             Console.WriteLine("⚙️  Configurazione SWIKIWI");
             Console.WriteLine("=========================");
             Console.WriteLine();
@@ -96,7 +96,7 @@ public class ConfigCommand
         try
         {
             var success = await _configService.EnableSourceAsync(sourceName);
-            
+
             if (success)
             {
                 Console.WriteLine($"✅ Fonte '{sourceName}' abilitata con successo");
@@ -120,7 +120,7 @@ public class ConfigCommand
         try
         {
             var success = await _configService.DisableSourceAsync(sourceName);
-            
+
             if (success)
             {
                 Console.WriteLine($"✅ Fonte '{sourceName}' disabilitata con successo");
@@ -147,7 +147,7 @@ public class ConfigCommand
             Console.WriteLine();
 
             var status = await _searchEngine.GetSourceStatusAsync();
-            
+
             Console.WriteLine("📊 Stato delle fonti:");
             Console.WriteLine();
 
@@ -177,7 +177,7 @@ public class ConfigCommand
             var config = await _configService.LoadConfigurationAsync();
             Console.WriteLine();
             Console.WriteLine("📚 Fonti disponibili:");
-            
+
             foreach (var source in config.Sources)
             {
                 var status = source.Enabled ? "(abilitata)" : "(disabilitata)";

@@ -51,7 +51,7 @@ public class InteractiveSearchCommand
             Console.WriteLine();
 
             var results = await _searchEngine.SearchAsync(query, source, limit: 10);
-            
+
             if (!results.Any())
             {
                 Console.WriteLine("❌ Nessun risultato trovato per la query specificata.");
@@ -64,7 +64,7 @@ public class InteractiveSearchCommand
 
             // Chiedi all'utente di selezionare
             var selectedResult = await PromptForSelectionAsync(resultList);
-            
+
             if (selectedResult != null)
             {
                 await ShowDetailedResultAsync(selectedResult);
@@ -86,7 +86,7 @@ public class InteractiveSearchCommand
         {
             var result = results[i];
             var summary = result.Summary.Length > 100 ? result.Summary[..97] + "..." : result.Summary;
-            
+
             Console.WriteLine($"[{i + 1}] {result.Title}");
             Console.WriteLine($"    📍 {result.Source} ({result.Language.ToUpperInvariant()})");
             Console.WriteLine($"    📄 {summary}");
@@ -99,12 +99,12 @@ public class InteractiveSearchCommand
         while (true)
         {
             Console.Write($"Seleziona un risultato (1-{results.Count}) o 'q' per uscire: ");
-            
+
             var input = await Task.Run(() => Console.ReadLine());
-            
+
             if (string.IsNullOrWhiteSpace(input))
                 continue;
-                
+
             if (input.ToLowerInvariant() == "q")
             {
                 Console.WriteLine("👋 Uscita dalla ricerca interattiva.");
@@ -145,7 +145,7 @@ public class InteractiveSearchCommand
         {
             Console.WriteLine("📊 INFORMAZIONI AGGIUNTIVE:");
             Console.WriteLine("".PadRight(40, '-'));
-            
+
             foreach (var metadata in result.Metadata)
             {
                 if (!string.IsNullOrEmpty(metadata.Value?.ToString()))
@@ -181,28 +181,28 @@ public class InteractiveSearchCommand
                 case 'O':
                     await OpenUrlAsync(result.Url);
                     break;
-                    
+
                 case 'c':
                 case 'C':
                     await CopyToClipboardAsync(result.Url);
                     break;
-                    
+
                 case 's':
                 case 'S':
                     await SearchRelatedAsync(result);
                     return;
-                    
+
                 case 'b':
                 case 'B':
                     Console.WriteLine("🔙 Tornando ai risultati...");
                     return;
-                    
+
                 case 'q':
                 case 'Q':
                     Console.WriteLine("👋 Uscita dall'applicazione.");
                     Environment.Exit(0);
                     break;
-                    
+
                 default:
                     Console.WriteLine("❌ Azione non riconosciuta. Riprova.");
                     break;
@@ -232,7 +232,7 @@ public class InteractiveSearchCommand
         {
             Console.WriteLine($"❌ Errore nell'apertura dell'URL: {ex.Message}");
         }
-        
+
         await Task.Delay(1000);
     }
 
@@ -274,7 +274,7 @@ public class InteractiveSearchCommand
         {
             Console.WriteLine($"❌ Errore nella copia: {ex.Message}");
         }
-        
+
         await Task.Delay(1000);
     }
 
@@ -283,30 +283,30 @@ public class InteractiveSearchCommand
         Console.WriteLine();
         Console.WriteLine("🔍 Ricerca argomenti correlati...");
         Console.WriteLine("💡 Suggerimenti basati sul titolo:");
-        
+
         // Estrai parole chiave dal titolo
         var keywords = result.Title
             .Split(new[] { ' ', '-', '(', ')', '[', ']', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
             .Where(w => w.Length > 3)
             .Take(3);
-            
+
         foreach (var keyword in keywords)
         {
             Console.WriteLine($"  • {keyword}");
         }
-        
+
         Console.WriteLine();
         Console.Write("Inserisci un nuovo termine di ricerca (o Enter per usare il titolo): ");
-        
+
         var newQuery = await Task.Run(() => Console.ReadLine());
         if (string.IsNullOrWhiteSpace(newQuery))
         {
             newQuery = result.Title;
         }
-        
+
         Console.WriteLine($"🔄 Avvio nuova ricerca per: \"{newQuery}\"");
         await Task.Delay(1000);
-        
+
         // Qui dovremmo rilanciare la ricerca - per ora mostriamo un messaggio
         Console.WriteLine("💡 Riavvia il comando con la nuova query per continuare la ricerca.");
     }

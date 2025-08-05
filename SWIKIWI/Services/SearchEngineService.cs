@@ -26,7 +26,7 @@ public class SearchEngineService
     public async Task InitializeAsync()
     {
         var config = await _configService.LoadConfigurationAsync();
-        
+
         // Inizializza fonti standard
         foreach (var source in config.Sources.Where(s => s.Enabled))
         {
@@ -35,7 +35,7 @@ public class SearchEngineService
                 ISearchService searchService = source.Type switch
                 {
                     SourceType.Api when source.Name.Contains("Wikipedia", StringComparison.OrdinalIgnoreCase) =>
-                        new WikipediaService(_httpClient, 
+                        new WikipediaService(_httpClient,
                             Microsoft.Extensions.Logging.LoggerFactory.Create(builder => builder.AddConsole())
                                 .CreateLogger<WikipediaService>(), source),
                     _ => throw new NotSupportedException($"Tipo di fonte non supportato: {source.Type} per {source.Name}")
@@ -49,7 +49,7 @@ public class SearchEngineService
                 _logger.LogError(ex, "Errore nell'inizializzazione del servizio {ServiceName}", source.Name);
             }
         }
-        
+
         // Inizializza fonti API personalizzate
         foreach (var source in config.CustomApiSources.Where(s => s.Enabled))
         {
@@ -70,8 +70,8 @@ public class SearchEngineService
     }
 
     public async Task<IEnumerable<SearchResult>> SearchAsync(
-        string query, 
-        string? sourceName = null, 
+        string query,
+        string? sourceName = null,
         int? limit = null,
         CancellationToken cancellationToken = default)
     {
@@ -102,7 +102,7 @@ public class SearchEngineService
                 try
                 {
                     var results = await service.SearchAsync(query, cancellationToken);
-                    _logger.LogDebug("Servizio {ServiceName} ha restituito {Count} risultati", 
+                    _logger.LogDebug("Servizio {ServiceName} ha restituito {Count} risultati",
                         service.Name, results.Count());
                     return results;
                 }
@@ -114,7 +114,7 @@ public class SearchEngineService
             });
 
         var searchResults = await Task.WhenAll(searchTasks);
-        
+
         foreach (var results in searchResults)
         {
             allResults.AddRange(results);
@@ -128,7 +128,7 @@ public class SearchEngineService
             .ToList();
 
         _logger.LogInformation("Ricerca completata: {TotalResults} risultati trovati", sortedResults.Count);
-        
+
         return sortedResults;
     }
 
@@ -140,7 +140,7 @@ public class SearchEngineService
     public async Task<Dictionary<string, bool>> GetSourceStatusAsync()
     {
         var status = new Dictionary<string, bool>();
-        
+
         foreach (var kvp in _searchServices)
         {
             try

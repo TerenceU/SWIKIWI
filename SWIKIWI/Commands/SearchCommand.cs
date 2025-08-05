@@ -64,16 +64,16 @@ public class SearchCommand
         try
         {
             Console.WriteLine($"🔍 Ricerca in corso per: \"{query}\"");
-            
+
             if (!string.IsNullOrEmpty(source))
             {
                 Console.WriteLine($"📚 Fonte: {source}");
             }
-            
+
             Console.WriteLine();
 
             var results = await _searchEngine.SearchAsync(query, source, limit);
-            
+
             if (!results.Any())
             {
                 Console.WriteLine("❌ Nessun risultato trovato per la query specificata.");
@@ -115,21 +115,21 @@ public class SearchCommand
         {
             Console.WriteLine($"🔸 [{index}] {result.Title}");
             Console.WriteLine($"   📍 Fonte: {result.Source} ({result.Language.ToUpperInvariant()})");
-            
+
             if (detailed)
             {
                 Console.WriteLine($"   🌐 URL: {result.Url}");
                 Console.WriteLine($"   ⭐ Rilevanza: {result.RelevanceScore:F2}");
                 Console.WriteLine($"   🕒 Recuperato: {result.RetrievedAt:HH:mm:ss}");
             }
-            
+
             // Tronca il riassunto se troppo lungo
             var summary = result.Summary;
             if (summary.Length > 200 && !detailed)
             {
                 summary = summary[..197] + "...";
             }
-            
+
             Console.WriteLine($"   📄 {summary}");
             Console.WriteLine();
         }
@@ -142,14 +142,14 @@ public class SearchCommand
             Console.WriteLine($"Titolo: {result.Title}");
             Console.WriteLine($"Fonte: {result.Source}");
             Console.WriteLine($"URL: {result.Url}");
-            
+
             if (detailed)
             {
                 Console.WriteLine($"Lingua: {result.Language}");
                 Console.WriteLine($"Rilevanza: {result.RelevanceScore:F2}");
                 Console.WriteLine($"Recuperato: {result.RetrievedAt}");
             }
-            
+
             Console.WriteLine($"Riassunto: {result.Summary}");
             Console.WriteLine(new string('-', 80));
         }
@@ -162,7 +162,7 @@ public class SearchCommand
             WriteIndented = true,
             PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
         });
-        
+
         Console.WriteLine(json);
     }
 }

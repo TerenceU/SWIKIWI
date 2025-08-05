@@ -21,7 +21,7 @@ class Program
             var httpClient = new HttpClient();
             var configService = new ConfigurationService(
                 loggerFactory.CreateLogger<ConfigurationService>());
-            
+
             var searchEngine = new SearchEngineService(
                 loggerFactory.CreateLogger<SearchEngineService>(),
                 configService,
@@ -39,7 +39,7 @@ class Program
                 configService,
                 searchEngine,
                 loggerFactory.CreateLogger<ConfigCommand>());
-                
+
             var interactiveSearchCommand = new InteractiveSearchCommand(
                 searchEngine,
                 loggerFactory.CreateLogger<InteractiveSearchCommand>());
@@ -85,12 +85,12 @@ class Program
         {
             logger.LogCritical(ex, "Errore critico nell'applicazione");
             Console.WriteLine($"❌ Errore critico: {ex.Message}");
-            
+
             if (ex.InnerException != null)
             {
                 Console.WriteLine($"   Dettaglio: {ex.InnerException.Message}");
             }
-            
+
             return 1;
         }
     }

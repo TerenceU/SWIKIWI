@@ -68,7 +68,7 @@ public class ConfigurationService
     {
         var config = await LoadConfigurationAsync();
         var source = config.Sources.FirstOrDefault(s => s.Name.Equals(sourceName, StringComparison.OrdinalIgnoreCase));
-        
+
         if (source == null)
         {
             _logger.LogWarning("Fonte non trovata: {SourceName}", sourceName);
@@ -85,7 +85,7 @@ public class ConfigurationService
     {
         var config = await LoadConfigurationAsync();
         var source = config.Sources.FirstOrDefault(s => s.Name.Equals(sourceName, StringComparison.OrdinalIgnoreCase));
-        
+
         if (source == null)
         {
             _logger.LogWarning("Fonte non trovata: {SourceName}", sourceName);
