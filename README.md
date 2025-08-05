@@ -21,12 +21,50 @@ SWIKIWI è uno strumento CLI (Command Line Interface) sviluppato in C# che perme
 - .NET 6.0 o superiore
 - Connessione internet attiva
 
-### Compilazione
+### Installazione come Global Tool (Raccomandato)
+
+SWIKIWI può essere installato come .NET Global Tool e sarà disponibile da qualsiasi cartella:
+
 ```bash
-git clone <repository-url>
+# Installa direttamente dal codice sorgente (per sviluppatori)
+git clone https://github.com/TerenceU/SWIKIWI
+cd SWIKIWI/SWIKIWI
+dotnet pack --configuration Release
+dotnet tool install --global --add-source ./bin/Release SWIKIWI
+
+# Oppure installa dal NuGet (quando sarà pubblicato)
+dotnet tool install --global SWIKIWI
+```
+
+⚠️ **Nota**: Se dovessi avere errori di sources NuGet non autorizzate, disabilita temporaneamente le sources problematiche:
+```bash
+dotnet nuget list source  # Visualizza tutte le sources
+dotnet nuget disable source "NomeSourceProblematica"  # Disabilita se necessario
+```
+
+### Verifica Installazione
+
+Dopo l'installazione, il comando `swikiwi` sarà disponibile globalmente:
+
+```bash
+swikiwi --help
+```
+
+### Disinstallazione
+
+Per rimuovere il tool:
+
+```bash
+dotnet tool uninstall --global SWIKIWI
+```
+
+### Compilazione Manuale (Sviluppatori)
+
+```bash
+git clone https://github.com/TerenceU/SWIKIWI
 cd SWIKIWI
 dotnet build
-dotnet run
+dotnet run -- search "test"
 ```
 
 ## 📖 Utilizzo
