@@ -1,0 +1,37 @@
+{
+  "sources": [
+    {
+      "name": "Wikipedia IT",
+      "url": "https://it.wikipedia.org/api/rest_v1/page/summary/{query}",
+      "enabled": true,
+      "language": "it",
+      "timeoutSeconds": 30,
+      "userAgent": "SWIKIWI/1.0",
+      "type": 0,
+      "parameters": {
+        "redirect": "true"
+      },
+      "cssSelectors": {}
+    },
+    {
+      "name": "Wikipedia EN",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/{query}",
+      "enabled": true,
+      "language": "en",
+      "timeoutSeconds": 30,
+      "userAgent": "SWIKIWI/1.0",
+      "type": 0,
+      "parameters": {
+        "redirect": "true"
+      },
+      "cssSelectors": {}
+    }
+  ],
+  "settings": {
+    "maxResults": 10,
+    "timeoutSeconds": 30,
+    "enableCaching": true,
+    "logLevel": "Information",
+    "outputFormat": "table"
+  }
+}
